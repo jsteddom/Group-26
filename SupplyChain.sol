@@ -72,6 +72,7 @@ event StakeholderRegistered(
 
 /*
   new raw material added event —— used by UI to show stuff in activity feed
+  keeps track of which manufacturer provided which material at what time.
 */
 event RawMaterialAdded(
     uint256 indexed materialId,
@@ -82,6 +83,7 @@ event RawMaterialAdded(
 
 /*
     regulator clicks verify or w/e and then this happens.
+    keeps the record of certification for raw material. If a batch of product has quality issues this can help find the cause.
 */
 event RawMaterialVerified(
     uint256 indexed materialId,
@@ -91,6 +93,7 @@ event RawMaterialVerified(
 
 /*
  product made in factory. batchNumber is like link to others from same run
+ vital for holding record of drugs that are in the market.
 */
 event ProductManufactured(
     uint256 indexed productId,
@@ -101,7 +104,7 @@ event ProductManufactured(
 );
 
 /*
-   transfer event. from -> to. updates status too bcz it changes when shipping and all
+   transfer event. from -> to. updates status helping keep track of chain of custody for the product
 */
 event ProductTransferred(
     uint256 indexed productId,
@@ -112,7 +115,9 @@ event ProductTransferred(
 );
 
 /*
-  when something goes wrong or we need to yank it from market. kind of critical tbh
+  when something goes wrong or we need to yank it from market.
+  the product id here will be used with mapping of batch products to quickly get which products need to be recalled.
+  furthermore the raw material verification can help quickly segregate between raw material quality issues and manufacturing issues.
 */
 event ProductRecalled(
     uint256 indexed productId,
