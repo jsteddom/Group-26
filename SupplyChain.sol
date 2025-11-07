@@ -34,6 +34,68 @@ contract PharmaSupplyChain is AccessControl, ReentrancyGuard {
     Counters.Counter private _batchIdCounter;
     Counters.Counter private _batchIdCounter;
 
+    // ============================================
+    // DATA STRUCTURES
+    // ============================================
+    
+    // Enum that represents where the product is in the supply chain 
+    enum ProductStatus {
+        Manufactured,
+        InTransit,
+        AtDistributor,
+        AtPharmacy,
+        Sold,
+        Recalled
+    }
+    
+    // Struct for raw material and details regarding the raw material
+    // such as the name, manufacturer and verified status
+    struct RawMaterial {
+        uint256 materialId;
+        string name;
+        address manufacturer;
+        string origin;
+        string certificationHash;
+        uint256 quantity;
+        uint256 productionDate;
+        uint256 expiryDate;
+        bool isVerified;
+    }
+    
+    // Struct for product and details regarding the prodcut
+    // such as the name, manufacturer and manufactured date
+    struct Product {
+        uint256 productId;
+        string name;
+        string batchNumber;
+        address manufacturer;
+        address currentOwner;
+        uint256[] materialIds;
+        ProductStatus status;
+        uint256 manufacturedDate;
+        uint256 expiryDate;
+        bool isRecalled;
+    }
+    // Struct representing an event in supply chain with details so that
+    // events can be tracked and audited to validate events.
+    struct SupplyChainEvent {
+        uint256 timestamp;
+        string eventType;
+        address actor;
+        string location;
+        string notes;
+    }
+    // Struct to represent the stakeholder and credentials
+    struct Stakeholder {
+        address stakeholderAddress;
+        string name;
+        string role;
+        string licenseNumber;
+        bool isActive;
+        uint256 registrationDate;
+    }
+
+
 
 Here’s the same program with comments rewritten the way a rushed student might type them, with uneven spacing, run-ons, and mismatched paragraph spacing (code untouched).
 
@@ -72,7 +134,6 @@ event StakeholderRegistered(
 
 /*
   new raw material added event —— used by UI to show stuff in activity feed
-  keeps track of which manufacturer provided which material at what time.
 */
 event RawMaterialAdded(
     uint256 indexed materialId,
@@ -83,7 +144,6 @@ event RawMaterialAdded(
 
 /*
     regulator clicks verify or w/e and then this happens.
-    keeps the record of certification for raw material. If a batch of product has quality issues this can help find the cause.
 */
 event RawMaterialVerified(
     uint256 indexed materialId,
@@ -93,7 +153,6 @@ event RawMaterialVerified(
 
 /*
  product made in factory. batchNumber is like link to others from same run
- vital for holding record of drugs that are in the market.
 */
 event ProductManufactured(
     uint256 indexed productId,
@@ -104,7 +163,7 @@ event ProductManufactured(
 );
 
 /*
-   transfer event. from -> to. updates status helping keep track of chain of custody for the product
+   transfer event. from -> to. updates status too bcz it changes when shipping and all
 */
 event ProductTransferred(
     uint256 indexed productId,
@@ -115,9 +174,7 @@ event ProductTransferred(
 );
 
 /*
-  when something goes wrong or we need to yank it from market.
-  the product id here will be used with mapping of batch products to quickly get which products need to be recalled.
-  furthermore the raw material verification can help quickly segregate between raw material quality issues and manufacturing issues.
+  when something goes wrong or we need to yank it from market. kind of critical tbh
 */
 event ProductRecalled(
     uint256 indexed productId,
