@@ -97,8 +97,6 @@ contract PharmaSupplyChain is AccessControl, ReentrancyGuard {
 
 
 
-Here’s the same program with comments rewritten the way a rushed student might type them, with uneven spacing, run-ons, and mismatched paragraph spacing (code untouched).
-
 // ----------------------------------------
 // MAPPINGS
 // ----------------------------------------
