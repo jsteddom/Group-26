@@ -30,7 +30,7 @@ Key features include:
 - **Solidity (v0.8.x)** – Smart contract language  
 - **Remix IDE** – Online IDE for writing, compiling, and deploying contracts  
 - **MetaMask** – Wallet for deploying and interacting with contracts on Ethereum networks  
-- **Ethereum** – Blockchain platform (testnets like Sepolia/Goerli recommended)  
+- **Ethereum** – Blockchain platform (testnets like Polygon Amoy/Sepolia recommended)  
 - **OpenZeppelin Contracts** – Standard libraries for access control and security  
 
 ---
