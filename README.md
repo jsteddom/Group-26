@@ -45,6 +45,7 @@ Key features include:
 
 2. Install Dependencies
     ```bash
+    forge install OpenZeppelin/openzeppelin-contracts@v4.9.3
     curl -L https://foundry.paradigm.xyz | bash
     foundryup
 3. Initialize a Foundry Project.
@@ -66,16 +67,27 @@ Key features include:
    anvil
 
 6. Leave Terminal Open from previous step. Open new terminal in project root.
-   
-
-3. Create and configure environment
-   Create a .env file in the root directory:  <br>
-   PRIVATE_KEY=your_wallet_private_key, <br>
-   SEPOLIA_RPC_URL=https://eth-sepolia.g.alchemy.com/v2/YOUR_KEY, <br>
-   ETHERSCAN_API_KEY=your_key, <br>
-   REPORT_GAS=false.
-   
-4) Compile contracts:
    ```bash
-   npx hardhat compile
+   forge create src/SupplyChain.sol:SupplyChain \
+     --rpc-url http://127.0.0.1:8545 \
+     --private-key <PRIVATE_KEY> //This will be generate from anvil when starting contract
+
+ 7. Assign Roles to addresses. From running anvil, you can assign roles to the generated addresses.
+    ```bash
+    // Get role hash
+    cast keccak "REGULATOR_ROLE"
+    // Admin can assign role to other addressess
+    cast send <USER_ADDRESS> "grantRole(bytes32,address)" \
+      0x7d4d... 0xABC123... \    // Role... Address to assign
+      --private-key <PRIVATE_KEY>
+    // Verify role was assigned
+    cast call <USER_ADDRESS> "hasRole(bytes32,address)" 0x7d4d... 0xABC123...
+
+ 8. Ready to test. The following are call formats 
+    ```bash
+    // Read only functions
+    cast call <USER_ADDRESS> "myGetter() returns (uint256)"
+    // Write functions
+    cast send <USER_ADDRESS> "myFunction(uint256)" 42 \
+      --private-key <PRIVATE_KEY>
 
