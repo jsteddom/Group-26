@@ -45,10 +45,28 @@ Key features include:
 
 2. Install Dependencies
     ```bash
-    npm install
-    npm install @openzeppelin/contracts
-    (Alternative)
-    npm install --save-dev hardhat
+    curl -L https://foundry.paradigm.xyz | bash
+    foundryup
+3. Initialize a Foundry Project.
+   ```bash
+   mkdir myproject
+   cd myproject
+   forge init .
+4. Remappings May Be Required. Edit the foundry.toml to include the following:
+   ```bash
+   [profile.default]
+   remappings = [
+    "@openzeppelin/=lib/openzeppelin-contracts/",
+    "forge-std/=lib/forge-std/src/"
+   ]
+    
+5. Compile Contract and Start Blockchain Locally with Anvil. This will print private keys/addresses for testing.
+   ```bash
+   forge build
+   anvil
+
+6. Leave Terminal Open from previous step. Open new terminal in project root.
+   
 
 3. Create and configure environment
    Create a .env file in the root directory:  <br>
